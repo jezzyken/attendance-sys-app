@@ -1,13 +1,19 @@
-const User = require('../models/User');
+const User = require("../models/User");
 
 const userService = {
-  createUser: async (userData) => {
-    const user = new User(userData);
-    return await user.save();
+  createUser: async (username, password, role) => {
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      throw new Error("Username already exists");
+    }
+
+    const user = new User({ username, password, role });
+    await user.save();
+    return user;
   },
-  
+
   getAllUsers: async () => {
-    console.log('get all users')
+    console.log("get all users");
     return await User.find();
   },
 
@@ -21,7 +27,7 @@ const userService = {
 
   deleteUser: async (id) => {
     return await User.findByIdAndDelete(id);
-  }
+  },
 };
 
 module.exports = userService;
