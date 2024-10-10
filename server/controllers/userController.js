@@ -3,8 +3,7 @@ const userService = require("../services/userService");
 const userController = {
   createUser: async (req, res) => {
     try {
-      const { username, password, role } = req.body;
-      const user = await userService.createUser(username, password, role);
+      const user = await userService.createUser(req.body);
       res.status(201).json({ message: 'User created successfully', user: { username: user.username, role: user.role } });
     } catch (error) {
       res.status(400).json({ error: error.message });

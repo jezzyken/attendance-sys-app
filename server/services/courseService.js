@@ -3,6 +3,7 @@ const Course = require('../models/Course');
 const courseService = {
   createCourse: async (courseData) => {
     const course = new Course(courseData);
+    console.log(course)
     return await course.save();
   },
 

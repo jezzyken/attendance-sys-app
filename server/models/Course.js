@@ -5,11 +5,10 @@ const courseSchema = new Schema(
   {
     courseName: { type: String, required: true },
     courseCode: { type: String, required: true, unique: true },
-    department: { type: String, required: true },
     credits: { type: Number, required: true },
-    departmentId: {
+    degreeId: {
       type: Schema.Types.ObjectId,
-      ref: "Department",
+      ref: "Degree",
       required: true,
     },
   },

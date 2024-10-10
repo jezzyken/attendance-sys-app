@@ -7,7 +7,7 @@ const departmentService = {
   },
   
   getAllDepartments: async () => {
-    return await Department.find();
+    return await Department.find()
   },
 
   getDepartmentById: async (id) => {

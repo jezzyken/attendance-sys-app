@@ -2,10 +2,11 @@ const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
 const authService = {
-  login: async (username, password) => {
-    const user = await User.findOne({ username });
+  login: async (email, password) => {
+    console.log(email, password)
+    const user = await User.findOne({ email });
     if (!user || !(await user.comparePassword(password))) {
-      throw new Error("Invalid username or password");
+      throw new Error("Invalid email or password");
     }
 
     const token = jwt.sign(

@@ -17,6 +17,14 @@ const userSchema = new mongoose.Schema(
       enum: ["teacher", "admin"],
       required: true,
     },
+    email: {
+      type: String,
+      unique: true,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    }
   },
   { timestamps: true }
 );
