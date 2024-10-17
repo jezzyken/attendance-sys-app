@@ -1,52 +1,69 @@
-const classService = require('../services/classService');
+const SERVICE = require('../services/classService');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
-const classController = {
-  createClass: async (req, res) => {
-    try {
-      const classInstance = await classService.createClass(req.body);
-      res.status(201).json(classInstance);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
+const getAll = catchAsync(async (req, res, next) => {
+    const items = await SERVICE.getAll();
+    res.status(200).json({
+        status: 'success',
+        results: items.length,
+        data: {
+            items
+        }
+    });
+});
 
-  getAllClasses: async (req, res) => {
-    try {
-      const classes = await classService.getAllClasses();
-      res.status(200).json(classes);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+const getById = catchAsync(async (req, res, next) => {
+    const item = await SERVICE.getById(req.params.id);
+    if (!item) {
+        return next(new AppError('Class not found', 404));
     }
-  },
+    res.status(200).json({
+        status: 'success',
+        data: {
+            item
+        }
+    });
+});
 
-  getClassById: async (req, res) => {
-    try {
-      const classInstance = await classService.getClassById(req.params.id);
-      if (!classInstance) return res.status(404).json({ message: 'Class not found' });
-      res.status(200).json(classInstance);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
+const add = catchAsync(async (req, res, next) => {
+    const newItem = await SERVICE.add(req.body);
+    res.status(201).json({
+        status: 'success',
+        data: {
+            item: newItem
+        }
+    });
+});
 
-  updateClass: async (req, res) => {
-    try {
-      const updatedClass = await classService.updateClass(req.params.id, req.body);
-      res.status(200).json(updatedClass);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+const update = catchAsync(async (req, res, next) => {
+    const updatedItem = await SERVICE.update(req.params.id, req.body);
+    if (!updatedItem) {
+        return next(new AppError('Class not found', 404));
     }
-  },
+    res.status(200).json({
+        status: 'success',
+        data: {
+            item: updatedItem
+        }
+    });
+});
 
-  deleteClass: async (req, res) => {
-    try {
-      const deletedClass = await classService.deleteClass(req.params.id);
-      if (!deletedClass) return res.status(404).json({ message: 'Class not found' });
-      res.status(204).json();
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+const remove = catchAsync(async (req, res, next) => {
+    const deletedItem = await SERVICE.remove(req.params.id);
+    if (!deletedItem) {
+        return next(new AppError('Class not found', 404));
     }
-  }
+    res.status(204).json({
+        status: 'success',
+        data: null
+    });
+});
+
+module.exports = {
+    getAll,
+    getById,
+    add,
+    update,
+    remove,
 };
-
-module.exports = classController;

@@ -1,52 +1,69 @@
-const studentService = require('../services/studentService');
+const SERVICE = require('../services/studentService');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
-const studentController = {
-  createStudent: async (req, res) => {
-    try {
-      const student = await studentService.createStudent(req.body);
-      res.status(201).json(student);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
+const getAll = catchAsync(async (req, res, next) => {
+    const items = await SERVICE.getAll();
+    res.status(200).json({
+        status: 'success',
+        results: items.length,
+        data: {
+            items
+        }
+    });
+});
 
-  getAllStudents: async (req, res) => {
-    try {
-      const students = await studentService.getAllStudents();
-      res.status(200).json(students);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+const getById = catchAsync(async (req, res, next) => {
+    const item = await SERVICE.getById(req.params.id);
+    if (!item) {
+        return next(new AppError('Student not found', 404));
     }
-  },
+    res.status(200).json({
+        status: 'success',
+        data: {
+            item
+        }
+    });
+});
 
-  getStudentById: async (req, res) => {
-    try {
-      const student = await studentService.getStudentById(req.params.id);
-      if (!student) return res.status(404).json({ message: 'Student not found' });
-      res.status(200).json(student);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
+const add = catchAsync(async (req, res, next) => {
+    const newItem = await SERVICE.add(req.body);
+    res.status(201).json({
+        status: 'success',
+        data: {
+            item: newItem
+        }
+    });
+});
 
-  updateStudent: async (req, res) => {
-    try {
-      const updatedStudent = await studentService.updateStudent(req.params.id, req.body);
-      res.status(200).json(updatedStudent);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+const update = catchAsync(async (req, res, next) => {
+    const updatedItem = await SERVICE.update(req.params.id, req.body);
+    if (!updatedItem) {
+        return next(new AppError('Student not found', 404));
     }
-  },
+    res.status(200).json({
+        status: 'success',
+        data: {
+            item: updatedItem
+        }
+    });
+});
 
-  deleteStudent: async (req, res) => {
-    try {
-      const deletedStudent = await studentService.deleteStudent(req.params.id);
-      if (!deletedStudent) return res.status(404).json({ message: 'Student not found' });
-      res.status(204).json();
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+const remove = catchAsync(async (req, res, next) => {
+    const deletedItem = await SERVICE.remove(req.params.id);
+    if (!deletedItem) {
+        return next(new AppError('Student not found', 404));
     }
-  }
+    res.status(204).json({
+        status: 'success',
+        data: null
+    });
+});
+
+module.exports = {
+    getAll,
+    getById,
+    add,
+    update,
+    remove,
 };
-
-module.exports = studentController;

@@ -1,26 +1,32 @@
-const Teacher = require('../models/Teacher');
+const MODEL = require("../models/teacherModel");
 
-const teacherService = {
-  createTeacher: async (teacherData) => {
-    const teacher = new Teacher(teacherData);
-    return await teacher.save();
-  },
-
-  getAllTeachers: async () => {
-    return await Teacher.find().populate('departmentId');
-  },
-
-  getTeacherById: async (id) => {
-    return await Teacher.findById(id).populate('departmentId');
-  },
-
-  updateTeacher: async (id, teacherData) => {
-    return await Teacher.findByIdAndUpdate(id, teacherData, { new: true });
-  },
-
-  deleteTeacher: async (id) => {
-    return await Teacher.findByIdAndDelete(id);
-  }
+const getAll = async () => {
+  return await MODEL.find().populate("departmentId");
 };
 
-module.exports = teacherService;
+const getById = async (id) => {
+  return await MODEL.findById(id).populate("departmentId");
+};
+
+const add = async (data) => {
+  const newItem = new MODEL(data);
+  return await newItem.save();
+};
+
+const update = async (id, data) => {
+  return await MODEL.findByIdAndUpdate(id, data, { new: true }).populate(
+    "departmentId"
+  );
+};
+
+const remove = async (id) => {
+  return await MODEL.findByIdAndDelete(id);
+};
+
+module.exports = {
+  getAll,
+  getById,
+  add,
+  update,
+  remove,
+};

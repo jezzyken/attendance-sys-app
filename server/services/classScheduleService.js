@@ -1,26 +1,30 @@
-const ClassSchedule = require('../models/ClassSchedule');
+const MODEL = require('../models/classscheduleModel');
 
-const classScheduleService = {
-  createClassSchedule: async (classScheduleData) => {
-    const classSchedule = new ClassSchedule(classScheduleData);
-    return await classSchedule.save();
-  },
-
-  getAllClassSchedules: async () => {
-    return await ClassSchedule.find();
-  },
-
-  getClassScheduleById: async (id) => {
-    return await ClassSchedule.findById(id);
-  },
-
-  updateClassSchedule: async (id, classScheduleData) => {
-    return await ClassSchedule.findByIdAndUpdate(id, classScheduleData, { new: true });
-  },
-
-  deleteClassSchedule: async (id) => {
-    return await ClassSchedule.findByIdAndDelete(id);
-  }
+const getAll = async () => {
+    return await MODEL.find();
 };
 
-module.exports = classScheduleService;
+const getById = async (id) => {
+    return await MODEL.findById(id);
+};
+
+const add = async (data) => {
+    const newItem = new MODEL(data);
+    return await newItem.save();
+};
+
+const update = async (id, data) => {
+    return await MODEL.findByIdAndUpdate(id, data, { new: true });
+};
+
+const remove = async (id) => {
+    return await MODEL.findByIdAndDelete(id);
+};
+
+module.exports = {
+    getAll,
+    getById,
+    add,
+    update,
+    remove,
+};

@@ -1,26 +1,30 @@
-const Attendance = require('../models/Attendance');
+const MODEL = require('../models/attendanceModel');
 
-const attendanceService = {
-  createAttendance: async (attendanceData) => {
-    const attendance = new Attendance(attendanceData);
-    return await attendance.save();
-  },
-
-  getAllAttendances: async () => {
-    return await Attendance.find().populate('classId studentId');
-  },
-
-  getAttendanceById: async (id) => {
-    return await Attendance.findById(id).populate('classId studentId');
-  },
-
-  updateAttendance: async (id, attendanceData) => {
-    return await Attendance.findByIdAndUpdate(id, attendanceData, { new: true });
-  },
-
-  deleteAttendance: async (id) => {
-    return await Attendance.findByIdAndDelete(id);
-  }
+const getAll = async () => {
+    return await MODEL.find();
 };
 
-module.exports = attendanceService;
+const getById = async (id) => {
+    return await MODEL.findById(id);
+};
+
+const add = async (data) => {
+    const newItem = new MODEL(data);
+    return await newItem.save();
+};
+
+const update = async (id, data) => {
+    return await MODEL.findByIdAndUpdate(id, data, { new: true });
+};
+
+const remove = async (id) => {
+    return await MODEL.findByIdAndDelete(id);
+};
+
+module.exports = {
+    getAll,
+    getById,
+    add,
+    update,
+    remove,
+};

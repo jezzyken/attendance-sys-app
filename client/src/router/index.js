@@ -50,6 +50,33 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
+        path: "/teachers",
+        name: "Teachers",
+        component: () => import("@/views/teachers/TeacherView"),
+        props: { mode: "add" },
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "/teachers/:id",
+        name: "Profile",
+        component: () => import("@/views/teachers/TeacherProfile"),
+        props: { mode: "add" },
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "/students",
+        name: "Students",
+        component: () => import("@/views/students/StudentView"),
+        props: { mode: "add" },
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "/schedules",
+        name: "Schedules",
+        component: () => import("@/views/schedules/scheduleView"),
+        meta: { requiresAuth: true },
+      },
+      {
         path: '/users/:id/:action(add|edit|view)',
         name: "EditSales",
         component: () => import("@/views/users/UserForm"),

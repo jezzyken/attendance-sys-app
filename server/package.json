@@ -1,14 +1,11 @@
 {
-  "name": "Attendance API",
+  "name": "Attendance App",
   "version": "1.0.0",
-  "description": "Attendance API",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
-  "author": "Jezrell Jolampong",
-  "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -19,6 +16,6 @@
     "mongoose": "^8.7.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.7"
+    "nodemon": "^2.0.7"
   }
 }

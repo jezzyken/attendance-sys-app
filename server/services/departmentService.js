@@ -1,26 +1,30 @@
-const Department = require('../models/Department');
+const MODEL = require('../models/departmentModel');
 
-const departmentService = {
-  createDepartment: async (departmentData) => {
-    const department = new Department(departmentData);
-    return await department.save();
-  },
-  
-  getAllDepartments: async () => {
-    return await Department.find()
-  },
-
-  getDepartmentById: async (id) => {
-    return await Department.findById(id);
-  },
-
-  updateDepartment: async (id, departmentData) => {
-    return await Department.findByIdAndUpdate(id, departmentData, { new: true });
-  },
-
-  deleteDepartment: async (id) => {
-    return await Department.findByIdAndDelete(id);
-  }
+const getAll = async () => {
+    return await MODEL.find();
 };
 
-module.exports = departmentService;
+const getById = async (id) => {
+    return await MODEL.findById(id);
+};
+
+const add = async (data) => {
+    const newItem = new MODEL(data);
+    return await newItem.save();
+};
+
+const update = async (id, data) => {
+    return await MODEL.findByIdAndUpdate(id, data, { new: true });
+};
+
+const remove = async (id) => {
+    return await MODEL.findByIdAndDelete(id);
+};
+
+module.exports = {
+    getAll,
+    getById,
+    add,
+    update,
+    remove,
+};

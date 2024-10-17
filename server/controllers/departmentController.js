@@ -1,52 +1,69 @@
-const departmentService = require('../services/departmentService');
+const SERVICE = require('../services/departmentService');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
-const departmentController = {
-  createDepartment: async (req, res) => {
-    try {
-      const department = await departmentService.createDepartment(req.body);
-      res.status(201).json(department);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
+const getAll = catchAsync(async (req, res, next) => {
+    const items = await SERVICE.getAll();
+    res.status(200).json({
+        status: 'success',
+        results: items.length,
+        data: {
+            items
+        }
+    });
+});
 
-  getAllDepartments: async (req, res) => {
-    try {
-      const departments = await departmentService.getAllDepartments();
-      res.status(200).json(departments);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+const getById = catchAsync(async (req, res, next) => {
+    const item = await SERVICE.getById(req.params.id);
+    if (!item) {
+        return next(new AppError('Department not found', 404));
     }
-  },
+    res.status(200).json({
+        status: 'success',
+        data: {
+            item
+        }
+    });
+});
 
-  getDepartmentById: async (req, res) => {
-    try {
-      const department = await departmentService.getDepartmentById(req.params.id);
-      if (!department) return res.status(404).json({ message: 'Department not found' });
-      res.status(200).json(department);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
+const add = catchAsync(async (req, res, next) => {
+    const newItem = await SERVICE.add(req.body);
+    res.status(201).json({
+        status: 'success',
+        data: {
+            item: newItem
+        }
+    });
+});
 
-  updateDepartment: async (req, res) => {
-    try {
-      const updatedDepartment = await departmentService.updateDepartment(req.params.id, req.body);
-      res.status(200).json(updatedDepartment);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+const update = catchAsync(async (req, res, next) => {
+    const updatedItem = await SERVICE.update(req.params.id, req.body);
+    if (!updatedItem) {
+        return next(new AppError('Department not found', 404));
     }
-  },
+    res.status(200).json({
+        status: 'success',
+        data: {
+            item: updatedItem
+        }
+    });
+});
 
-  deleteDepartment: async (req, res) => {
-    try {
-      const deletedDepartment = await departmentService.deleteDepartment(req.params.id);
-      if (!deletedDepartment) return res.status(404).json({ message: 'Department not found' });
-      res.status(204).json();
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+const remove = catchAsync(async (req, res, next) => {
+    const deletedItem = await SERVICE.remove(req.params.id);
+    if (!deletedItem) {
+        return next(new AppError('Department not found', 404));
     }
-  }
+    res.status(204).json({
+        status: 'success',
+        data: null
+    });
+});
+
+module.exports = {
+    getAll,
+    getById,
+    add,
+    update,
+    remove,
 };
-
-module.exports = departmentController;

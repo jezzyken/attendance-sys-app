@@ -1,26 +1,30 @@
-const Class = require('../models/Class');
+const MODEL = require('../models/classModel');
 
-const classService = {
-  createClass: async (classData) => {
-    const classInstance = new Class(classData);
-    return await classInstance.save();
-  },
-
-  getAllClasses: async () => {
-    return await Class.find().populate('studentId courseId classScheduleId');
-  },
-
-  getClassById: async (id) => {
-    return await Class.findById(id).populate('studentId courseId classScheduleId');
-  },
-
-  updateClass: async (id, classData) => {
-    return await Class.findByIdAndUpdate(id, classData, { new: true });
-  },
-
-  deleteClass: async (id) => {
-    return await Class.findByIdAndDelete(id);
-  }
+const getAll = async () => {
+    return await MODEL.find();
 };
 
-module.exports = classService;
+const getById = async (id) => {
+    return await MODEL.findById(id);
+};
+
+const add = async (data) => {
+    const newItem = new MODEL(data);
+    return await newItem.save();
+};
+
+const update = async (id, data) => {
+    return await MODEL.findByIdAndUpdate(id, data, { new: true });
+};
+
+const remove = async (id) => {
+    return await MODEL.findByIdAndDelete(id);
+};
+
+module.exports = {
+    getAll,
+    getById,
+    add,
+    update,
+    remove,
+};

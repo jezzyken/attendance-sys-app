@@ -1,53 +1,69 @@
-const userService = require("../services/userService");
+const SERVICE = require('../services/userService');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
-const userController = {
-  createUser: async (req, res) => {
-    try {
-      const user = await userService.createUser(req.body);
-      res.status(201).json({ message: 'User created successfully', user: { username: user.username, role: user.role } });
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
+const getAll = catchAsync(async (req, res, next) => {
+    const items = await SERVICE.getAll();
+    res.status(200).json({
+        status: 'success',
+        results: items.length,
+        data: {
+            items
+        }
+    });
+});
 
-  getAllUsers: async (req, res) => {
-    try {
-      const users = await userService.getAllUsers();
-      res.status(200).json(users);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
+const getById = catchAsync(async (req, res, next) => {
+    const item = await SERVICE.getById(req.params.id);
+    if (!item) {
+        return next(new AppError('User not found', 404));
     }
-  },
+    res.status(200).json({
+        status: 'success',
+        data: {
+            item
+        }
+    });
+});
 
-  getUserById: async (req, res) => {
-    try {
-      const user = await userService.getUserById(req.params.id);
-      if (!user) return res.status(404).json({ message: "User not found" });
-      res.status(200).json(user);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  },
+const add = catchAsync(async (req, res, next) => {
+    const newItem = await SERVICE.add(req.body);
+    res.status(201).json({
+        status: 'success',
+        data: {
+            item: newItem
+        }
+    });
+});
 
-  updateUser: async (req, res) => {
-    try {
-      const user = await userService.updateUser(req.params.id, req.body);
-      if (!user) return res.status(404).json({ message: "User not found" });
-      res.status(200).json(user);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
+const update = catchAsync(async (req, res, next) => {
+    const updatedItem = await SERVICE.update(req.params.id, req.body);
+    if (!updatedItem) {
+        return next(new AppError('User not found', 404));
     }
-  },
+    res.status(200).json({
+        status: 'success',
+        data: {
+            item: updatedItem
+        }
+    });
+});
 
-  deleteUser: async (req, res) => {
-    try {
-      const user = await userService.deleteUser(req.params.id);
-      if (!user) return res.status(404).json({ message: "User not found" });
-      res.status(204).json();
-    } catch (error) {
-      res.status(500).json({ message: error.message });
+const remove = catchAsync(async (req, res, next) => {
+    const deletedItem = await SERVICE.remove(req.params.id);
+    if (!deletedItem) {
+        return next(new AppError('User not found', 404));
     }
-  },
+    res.status(204).json({
+        status: 'success',
+        data: null
+    });
+});
+
+module.exports = {
+    getAll,
+    getById,
+    add,
+    update,
+    remove,
 };
-
-module.exports = userController;

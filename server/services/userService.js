@@ -1,33 +1,30 @@
-const User = require("../models/User");
+const MODEL = require('../models/userModel');
 
-const userService = {
-  createUser: async (data) => {
-    const existingUser = await User.findOne({ email: data.email });
-    if (existingUser) {
-      throw new Error("Username already exists");
-    }
-
-    const user = new User(data);
-    await user.save();
-    return user;
-  },
-
-  getAllUsers: async () => {
-    console.log("get all users");
-    return await User.find();
-  },
-
-  getUserById: async (id) => {
-    return await User.findById(id);
-  },
-
-  updateUser: async (id, userData) => {
-    return await User.findByIdAndUpdate(id, userData, { new: true });
-  },
-
-  deleteUser: async (id) => {
-    return await User.findByIdAndDelete(id);
-  },
+const getAll = async () => {
+    return await MODEL.find();
 };
 
-module.exports = userService;
+const getById = async (id) => {
+    return await MODEL.findById(id);
+};
+
+const add = async (data) => {
+    const newItem = new MODEL(data);
+    return await newItem.save();
+};
+
+const update = async (id, data) => {
+    return await MODEL.findByIdAndUpdate(id, data, { new: true });
+};
+
+const remove = async (id) => {
+    return await MODEL.findByIdAndDelete(id);
+};
+
+module.exports = {
+    getAll,
+    getById,
+    add,
+    update,
+    remove,
+};

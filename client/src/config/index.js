@@ -1,9 +1,9 @@
 let url;
 
 if (process.env.NODE_ENV === "production") {
-  url = `/api`;
+  url = `/api/v1`;
 } else {
-  url = `http://localhost:3002/api`;
+  url = `http://localhost:3001/api/v1`;
 }
 
 module.exports = {

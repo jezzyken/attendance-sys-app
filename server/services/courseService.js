@@ -1,27 +1,32 @@
-const Course = require('../models/Course');
+const MODEL = require("../models/courseModel");
 
-const courseService = {
-  createCourse: async (courseData) => {
-    const course = new Course(courseData);
-    console.log(course)
-    return await course.save();
-  },
-
-  getAllCourses: async () => {
-    return await Course.find().populate('departmentId');
-  },
-
-  getCourseById: async (id) => {
-    return await Course.findById(id).populate('departmentId');
-  },
-
-  updateCourse: async (id, courseData) => {
-    return await Course.findByIdAndUpdate(id, courseData, { new: true });
-  },
-
-  deleteCourse: async (id) => {
-    return await Course.findByIdAndDelete(id);
-  }
+const getAll = async () => {
+  return await MODEL.find().populate("programId");
 };
 
-module.exports = courseService;
+const getById = async (id) => {
+  return await MODEL.findById(id).populate("programId");
+};
+
+const add = async (data) => {
+  const newItem = new MODEL(data);
+  return await newItem.save();
+};
+
+const update = async (id, data) => {
+  return await MODEL.findByIdAndUpdate(id, data, { new: true }).populate(
+    "programId"
+  );
+};
+
+const remove = async (id) => {
+  return await MODEL.findByIdAndDelete(id);
+};
+
+module.exports = {
+  getAll,
+  getById,
+  add,
+  update,
+  remove,
+};

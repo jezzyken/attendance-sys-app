@@ -1,52 +1,69 @@
-const attendanceService = require('../services/attendanceService');
+const SERVICE = require('../services/attendanceService');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
-const attendanceController = {
-  createAttendance: async (req, res) => {
-    try {
-      const attendance = await attendanceService.createAttendance(req.body);
-      res.status(201).json(attendance);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
+const getAll = catchAsync(async (req, res, next) => {
+    const items = await SERVICE.getAll();
+    res.status(200).json({
+        status: 'success',
+        results: items.length,
+        data: {
+            items
+        }
+    });
+});
 
-  getAllAttendances: async (req, res) => {
-    try {
-      const attendances = await attendanceService.getAllAttendances();
-      res.status(200).json(attendances);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+const getById = catchAsync(async (req, res, next) => {
+    const item = await SERVICE.getById(req.params.id);
+    if (!item) {
+        return next(new AppError('Attendance not found', 404));
     }
-  },
+    res.status(200).json({
+        status: 'success',
+        data: {
+            item
+        }
+    });
+});
 
-  getAttendanceById: async (req, res) => {
-    try {
-      const attendance = await attendanceService.getAttendanceById(req.params.id);
-      if (!attendance) return res.status(404).json({ message: 'Attendance record not found' });
-      res.status(200).json(attendance);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  },
+const add = catchAsync(async (req, res, next) => {
+    const newItem = await SERVICE.add(req.body);
+    res.status(201).json({
+        status: 'success',
+        data: {
+            item: newItem
+        }
+    });
+});
 
-  updateAttendance: async (req, res) => {
-    try {
-      const updatedAttendance = await attendanceService.updateAttendance(req.params.id, req.body);
-      res.status(200).json(updatedAttendance);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+const update = catchAsync(async (req, res, next) => {
+    const updatedItem = await SERVICE.update(req.params.id, req.body);
+    if (!updatedItem) {
+        return next(new AppError('Attendance not found', 404));
     }
-  },
+    res.status(200).json({
+        status: 'success',
+        data: {
+            item: updatedItem
+        }
+    });
+});
 
-  deleteAttendance: async (req, res) => {
-    try {
-      const deletedAttendance = await attendanceService.deleteAttendance(req.params.id);
-      if (!deletedAttendance) return res.status(404).json({ message: 'Attendance record not found' });
-      res.status(204).json();
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+const remove = catchAsync(async (req, res, next) => {
+    const deletedItem = await SERVICE.remove(req.params.id);
+    if (!deletedItem) {
+        return next(new AppError('Attendance not found', 404));
     }
-  }
+    res.status(204).json({
+        status: 'success',
+        data: null
+    });
+});
+
+module.exports = {
+    getAll,
+    getById,
+    add,
+    update,
+    remove,
 };
-
-module.exports = attendanceController;
