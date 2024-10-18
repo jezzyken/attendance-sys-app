@@ -19,7 +19,7 @@
             <template v-slot:[`item.select`]="{ item }">
               <router-link
                 :to="{
-                  name: 'Profile',
+                  name: 'Teacher Schedule',
                   params: { id: item._id },
                 }"
               >
@@ -106,12 +106,14 @@
                     offset-y
                     min-width="290px"
                   >
-                    <template v-slot:activator="{ on }">
+                    <template v-slot:activator="{ on, attrs }">
                       <v-text-field
                         v-model="editedItem.employmentDate"
                         label="Employment Date"
                         readonly
-                        v-bind="on"
+                        v-bind="attrs"
+                        v-on="on"
+                        :rules="[rules.required]"
                       ></v-text-field>
                     </template>
                     <v-date-picker

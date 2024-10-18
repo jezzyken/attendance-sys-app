@@ -95,24 +95,24 @@ export default {
             appendIcon: "",
             route: "/degrees",
           },
-          {
-            action: "mdi-calendar-multiselect",
-            title: "Schedule",
-            appendIcon: "",
-            route: "/schedules",
-          },
+          // {
+          //   action: "mdi-calendar-multiselect",
+          //   title: "Schedule",
+          //   appendIcon: "",
+          //   route: "/schedules",
+          // },
           {
             action: "mdi-list-box-outline",
             title: "Departments",
             appendIcon: "",
             route: "/departments",
           },
-          {
-            action: "mdi-text-box-check-outline",
-            title: "Attendance",
-            appendIcon: "",
-            route: "/users",
-          },
+          // {
+          //   action: "mdi-text-box-check-outline",
+          //   title: "Attendance",
+          //   appendIcon: "",
+          //   route: "/users",
+          // },
           {
             action: "mdi-account-multiple",
             title: "Accounts",

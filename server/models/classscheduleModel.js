@@ -3,20 +3,25 @@ const Schema = mongoose.Schema;
 
 const classScheduleSchema = new Schema(
   {
-    subject: { type: String, required: true },
+    courseId: {
+      type: Schema.Types.ObjectId,
+      ref: "Course",
+      required: true,
+    },
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
+    teacherId: { type: Schema.Types.ObjectId, ref: "Teacher", required: true },
     dayOfWeek: [
       {
         type: String,
         enum: [
-          "monday",
-          "tuesday",
-          "wednesday",
-          "thursday",
-          "friday",
-          "saturday",
-          "sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday",
         ],
         required: true,
       },

@@ -5,7 +5,7 @@
         <v-card>
           <v-card-title class="d-flex justify-space-between align-center">
             Students
-            <v-btn color="primary" @click="openDialog()">
+            <v-btn color="primary" @click="openDialog">
               <v-icon left>mdi-plus</v-icon>
               Add Student
             </v-btn>
@@ -28,7 +28,7 @@
               <v-icon small class="mr-2" @click="editItem(item)">
                 mdi-pencil
               </v-icon>
-              <v-icon small @click="deleteItem(item)" :loading="deleteLoading">
+              <v-icon small @click="deleteItem(item)">
                 mdi-delete
               </v-icon>
             </template>
@@ -48,15 +48,15 @@
               <v-col cols="12">
                 <v-text-field
                   v-model="editedItem.firstName"
-                  label="First Name"
-                  required
+                  label="First Name*"
+                  :rules="[rules.required]"
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-text-field
                   v-model="editedItem.lastName"
-                  label="Last Name"
-                  required
+                  label="Last Name*"
+                  :rules="[rules.required]"
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
@@ -66,19 +66,36 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-text-field
-                  v-model="editedItem.birthDate"
-                  label="Birth Date"
-                  type="date"
-                  required
-                ></v-text-field>
+                <v-menu
+                  ref="menu"
+                  v-model="menu"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="editedItem.birthDate"
+                      label="Birth Date*"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                      :rules="[rules.required]"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    v-model="editedItem.birthDate"
+                    @input="menu = false"
+                  ></v-date-picker>
+                </v-menu>
               </v-col>
               <v-col cols="12">
                 <v-select
                   v-model="editedItem.yearLevel"
                   :items="yearLevels"
-                  label="Year Level"
-                  required
+                  label="Year Level*"
+                  :rules="[rules.required]"
                 ></v-select>
               </v-col>
               <v-col cols="12">
@@ -98,7 +115,7 @@
                 <v-select
                   v-model="editedItem.programId"
                   :items="programs"
-                  item-text="program"
+                  item-text="programAbr"
                   item-value="_id"
                   label="Program"
                 ></v-select>
@@ -109,9 +126,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-          <v-btn color="blue darken-1" text @click="save" :loading="loading"
-            >Save</v-btn
-          >
+          <v-btn color="blue darken-1" text @click="save" :loading="loading">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -128,55 +143,26 @@
 <script>
 import axios from "axios";
 import config from "@/config/index.js";
+import moment from "moment";
 
 export default {
   data: () => ({
     dialog: false,
+    menu: false,
     search: "",
     loading: false,
-    deleteLoading: false,
     snackbar: false,
     snackbarText: "",
     snackbarColor: "",
     headers: [
-      {
-        text: "First Name",
-        align: "start",
-        sortable: true,
-        value: "firstName",
-      },
+      { text: "First Name", align: "start", sortable: true, value: "firstName" },
       { text: "Last Name", align: "start", sortable: true, value: "lastName" },
-      {
-        text: "Middle Name",
-        align: "start",
-        sortable: true,
-        value: "middleName",
-      },
-      {
-        text: "Birth Date",
-        align: "start",
-        sortable: true,
-        value: "birthDate",
-      },
-      {
-        text: "Year Level",
-        align: "start",
-        sortable: true,
-        value: "yearLevel",
-      },
-      {
-        text: "Guardian Name",
-        align: "start",
-        sortable: true,
-        value: "guardianName",
-      },
-      {
-        text: "Guardian Phone",
-        align: "start",
-        sortable: true,
-        value: "guardianPhone",
-      },
-      { text: "Program", align: "start", sortable: true, value: "programId.program" },
+      { text: "Middle Name", align: "start", sortable: true, value: "middleName" },
+      { text: "Birth Date", align: "start", sortable: true, value: "birthDate" },
+      { text: "Year Level", align: "start", sortable: true, value: "yearLevel" },
+      { text: "Guardian Name", align: "start", sortable: true, value: "guardianName" },
+      { text: "Guardian Phone", align: "start", sortable: true, value: "guardianPhone" },
+      { text: "Program", align: "start", sortable: true, value: "programId.programAbr" },
       { text: "Actions", value: "actions", sortable: false },
     ],
     students: [],
@@ -201,8 +187,11 @@ export default {
       guardianPhone: "",
       programId: "",
     },
-    yearLevels: ["First Year", "Second Year", "Third Year", "Forth Year"],
-    programs: [], // Assuming you'll fetch programs similarly
+    yearLevels: ["First Year", "Second Year", "Third Year", "Fourth Year"],
+    programs: [],
+    rules: {
+      required: value => !!value || 'Required.',
+    },
   }),
 
   computed: {
@@ -219,7 +208,7 @@ export default {
 
   created() {
     this.fetchStudents();
-    this.fetchPrograms(); // Fetch programs for the select dropdown
+    this.fetchPrograms();
   },
 
   methods: {
@@ -233,18 +222,13 @@ export default {
       this.loading = true;
       try {
         const response = await axios.get(`${config.url}/student`);
-        if (
-          response.data &&
-          response.data.data &&
-          Array.isArray(response.data.data.items)
-        ) {
-          this.students = response.data.data.items;
+        if (response.data?.data?.items) {
+          this.students = response.data.data.items.map(student => ({
+            ...student,
+            birthDate: moment(student.birthDate).format('YYYY-MM-DD')
+          }));
         } else {
-          console.error("Unexpected response structure:", response.data);
-          this.showSnackbar(
-            "Error fetching students: Unexpected data structure",
-            "error"
-          );
+          throw new Error("Unexpected response structure");
         }
       } catch (error) {
         console.error("Error fetching students:", error);
@@ -257,18 +241,10 @@ export default {
     async fetchPrograms() {
       try {
         const response = await axios.get(`${config.url}/program`);
-        if (
-          response.data &&
-          response.data.data &&
-          Array.isArray(response.data.data.items)
-        ) {
+        if (response.data?.data?.items) {
           this.programs = response.data.data.items;
         } else {
-          console.error("Unexpected response structure:", response.data);
-          this.showSnackbar(
-            "Error fetching programs: Unexpected data structure",
-            "error"
-          );
+          throw new Error("Unexpected response structure");
         }
       } catch (error) {
         console.error("Error fetching programs:", error);
@@ -283,35 +259,19 @@ export default {
     },
 
     async deleteItem(item) {
-      if (!item || !item._id) {
-        console.error("Invalid item for deletion:", item);
+      if (!item?._id) {
         this.showSnackbar("Error: Invalid item for deletion", "error");
         return;
       }
 
-      const index = this.students.indexOf(item);
-      this.students.splice(index, 1); // Optimistically remove the item
-      this.showSnackbar("Student deleted", "success");
-
       if (confirm("Are you sure you want to delete this student?")) {
         try {
-          const response = await axios.delete(
-            `${config.url}/student/${item._id}`
-          );
-          if (response.status !== 204) {
-            console.error("Unexpected response status:", response.status);
-            this.showSnackbar(
-              "Error deleting student: Unexpected response",
-              "error"
-            );
-            // Re-add the item if deletion fails
-            this.students.splice(index, 0, item);
-          }
+          await axios.delete(`${config.url}/student/${item._id}`);
+          this.students = this.students.filter(s => s._id !== item._id);
+          this.showSnackbar("Student deleted", "success");
         } catch (error) {
           console.error("Error deleting student:", error);
           this.showSnackbar("Error deleting student", "error");
-          // Re-add the item if deletion fails
-          this.students.splice(index, 0, item);
         }
       }
     },
@@ -331,51 +291,33 @@ export default {
       }
 
       try {
-        if (this.editedIndex > -1) {
-          if (!this.editedItem || !this.editedItem._id) {
-            console.error("Invalid item for update:", this.editedItem);
-            this.showSnackbar("Error: Invalid item for update", "error");
-            return;
-          }
+        const studentData = {
+          ...this.editedItem,
+          birthDate: moment(this.editedItem.birthDate).format('YYYY-MM-DD')
+        };
 
-          const response = await axios.put(
-            `${config.url}/student/${this.editedItem._id}`,
-            this.editedItem
-          );
-          if (response.data && response.data.data && response.data.data.item) {
-            Object.assign(
-              this.students[this.editedIndex],
-              response.data.data.item
-            );
-            this.showSnackbar("Student updated", "success");
-          } else {
-            console.error("Unexpected response structure:", response.data);
-            this.showSnackbar(
-              "Error updating student: Unexpected data structure",
-              "error"
-            );
-          }
+        let response;
+        if (this.editedIndex > -1) {
+          response = await axios.put(`${config.url}/student/${studentData._id}`, studentData);
         } else {
-          const response = await axios.post(
-            `${config.url}/student`,
-            this.editedItem
-          );
-          if (response.data && response.data.data && response.data.data.item) {
-            this.students.push(response.data.data.item);
-            this.showSnackbar("Student added", "success");
+          response = await axios.post(`${config.url}/student`, studentData);
+        }
+
+        if (response.data?.data?.item) {
+          const updatedStudent = response.data.data.item;
+          if (this.editedIndex > -1) {
+            Object.assign(this.students[this.editedIndex], updatedStudent);
           } else {
-            console.error("Unexpected response structure:", response.data);
-            this.showSnackbar(
-              "Error adding student: Unexpected data structure",
-              "error"
-            );
+            this.students.push(updatedStudent);
           }
+          this.showSnackbar(this.editedIndex > -1 ? "Student updated" : "Student added", "success");
+          this.close();
+        } else {
+          throw new Error("Unexpected response structure");
         }
       } catch (error) {
         console.error("Error saving student:", error);
         this.showSnackbar("Error saving student", "error");
-      } finally {
-        this.close();
       }
     },
 
@@ -396,7 +338,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-/* Add any additional styles here */
-</style>

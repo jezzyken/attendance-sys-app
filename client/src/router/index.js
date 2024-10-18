@@ -64,6 +64,12 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
+        path: "/teachers/:id/schedule",
+        name: "Teacher Schedule",
+        component: () => import("@/views/teachers/TeacherSchedule"),
+        meta: { requiresAuth: true },
+      },
+      {
         path: "/students",
         name: "Students",
         component: () => import("@/views/students/StudentView"),
@@ -83,6 +89,16 @@ const routes = [
         props: true,
         meta: { requiresAuth: true },
       },
+      {
+        path: '/create-class-schedule/:teacherId',
+        name: 'Add Class',
+        component: () => import('@/views/teachers/ClassScheduleForm')
+      },
+      {
+        path: '/edit-class-schedule/:id',
+        name: 'Edit Class',
+        component: () => import('@/views/teachers/ClassScheduleForm')
+      }
     ],
   },
   {
