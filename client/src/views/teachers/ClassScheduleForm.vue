@@ -226,7 +226,7 @@ export default {
     async fetchSchedule() {
       try {
         const response = await axios.get(
-          `${config.url}/class-schedule/${this.$route.params.id}`
+          `${config.url}/schedule/${this.$route.params.id}`
         );
         const scheduleData = response.data.data.item;
 
@@ -263,11 +263,11 @@ export default {
 
         if (this.isEditing) {
           await axios.put(
-            `${config.url}/class-schedule/${this.$route.params.id}`,
+            `${config.url}/schedule/${this.$route.params.id}`,
             scheduleData
           );
         } else {
-          await axios.post(`${config.url}/class-schedule`, scheduleData);
+          await axios.post(`${config.url}/schedule`, scheduleData);
         }
 
         this.showSnackbar(

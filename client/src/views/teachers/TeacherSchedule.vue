@@ -113,7 +113,7 @@ export default {
       this.loading = true;
       try {
         const response = await axios.get(
-          `${config.url}/class-schedule/teacher/${this.teacherId}`
+          `${config.url}/schedule/teacher/${this.teacherId}`
         );
         this.schedules = response.data.data.items;
       } catch (error) {
@@ -131,7 +131,7 @@ export default {
     async deleteItem(item) {
       if (confirm("Are you sure you want to delete this schedule?")) {
         try {
-          await axios.delete(`${config.url}/class-schedule/${item._id}`);
+          await axios.delete(`${config.url}/schedule/${item._id}`);
           this.schedules = this.schedules.filter((s) => s._id !== item._id);
           this.showSnackbar("Schedule deleted", "success");
         } catch (error) {
