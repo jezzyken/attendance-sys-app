@@ -1,4 +1,4 @@
-const MODEL = require("../models/classScheduleModel");
+const MODEL = require("../models/scheduleModel");
 const COURSE_MODEL = require("../models/courseModel");
 const STUDENT_MODEL = require("../models/studentModel");
 const CLASS_MODEL = require("../models/classModel");
