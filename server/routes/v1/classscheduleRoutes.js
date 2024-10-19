@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const CONTROLLER = require('../../controllers/classScheduleController');
+const CONTROLLER = require('../../controllers/classscheduleController');
 
 router.get('/', CONTROLLER.getAll);
 router.get('/:id', CONTROLLER.getById);

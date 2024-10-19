@@ -1,4 +1,4 @@
-const SERVICE = require("../services/classScheduleService");
+const SERVICE = require("../services/classscheduleService");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 
