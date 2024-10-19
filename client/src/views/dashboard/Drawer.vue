@@ -22,7 +22,7 @@ export default {
 
 <style scoped>
 .nav-bg {
-  background: rgb(0,0,51);
+  background: #161a43 !important;
   /* background: linear-gradient(0deg, rgba(36,36,79,1) 5%, rgba(0,255,244,1) 96%); */
 }
 </style>

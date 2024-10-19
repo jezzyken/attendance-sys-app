@@ -1,6 +1,8 @@
 <template>
   <div class="main-container">
-    <v-row>
+
+    <h1>dashboard</h1>
+    <!-- <v-row>
       <v-col cols="12" md="3" v-for="(card, i) in dashboardCards" :key="i">
         <v-card
           height="150"
@@ -21,7 +23,7 @@
           </div>
         </v-card>
       </v-col>
-    </v-row>
+    </v-row> -->
   </div>
 </template>
 

@@ -7,9 +7,9 @@ module.exports = defineConfig({
   ],
   chainWebpack: config => {
     config.plugin('html').tap(args => {
-      args[0].title = "Attendance System";
+      args[0].title = "GIT Attendance System";
       return args;
     });
   },
-  outputDir: path.resolve(__dirname,'../../backend/public'),
+  outputDir: path.resolve(__dirname,'../server/public'),
 })

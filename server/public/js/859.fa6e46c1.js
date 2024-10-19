@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkvue2"]=self["webpackChunkvue2"]||[]).push([[859],{859:function(u,n,e){e.r(n),e.d(n,{default:function(){return f}});var r=function(){var u=this,n=u._self._c;return n("h1",[u._v("Product Form")])},t=[],l=e(1656),c={},s=(0,l.A)(c,r,t,!1,null,null,null),f=s.exports}}]);
+//# sourceMappingURL=859.fa6e46c1.js.map
