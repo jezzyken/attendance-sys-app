@@ -10,8 +10,6 @@ require('dotenv').config({ path: './.env' });
 
 const app = express();
 
-global.__basedir = __dirname;
-
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
