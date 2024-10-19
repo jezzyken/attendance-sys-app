@@ -2,6 +2,7 @@ const MODEL = require("../models/classScheduleModel");
 const COURSE_MODEL = require("../models/courseModel");
 const STUDENT_MODEL = require("../models/studentModel");
 const CLASS_MODEL = require("../models/classModel");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 const getAll = async () => {
   return await MODEL.find().populate("courseId");
@@ -13,6 +14,24 @@ const getById = async (id) => {
 
 const getByTeacherId = async (teacherId) => {
   return await MODEL.find({ teacherId }).populate("courseId");
+};
+
+const getClassSchedules = async (req) => {
+  const { id } = req.params;
+  const schedules = await MODEL.find({ teacherId: new ObjectId(id) }).populate("courseId").lean();
+
+  return await Promise.all(
+    schedules.map(async (schedule) => {
+      const studentCount = await CLASS_MODEL.countDocuments({
+        classScheduleId: schedule._id,
+      });
+      return {
+        ...schedule,
+        studentCount,
+        dayOfWeek: schedule.dayOfWeek.join(", "),
+      };
+    })
+  );
 };
 
 const add = async (data) => {
@@ -108,6 +127,7 @@ module.exports = {
   getAll,
   getById,
   getByTeacherId,
+  getClassSchedules,
   add,
   update,
   remove,

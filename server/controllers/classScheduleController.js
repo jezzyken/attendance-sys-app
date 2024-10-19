@@ -37,6 +37,11 @@ const getByTeacherId = catchAsync(async (req, res, next) => {
   });
 });
 
+const getClassSchedules = catchAsync(async (req, res, next) => {
+  const items = await SERVICE.getClassSchedules(req);
+  return res.send(items)
+});
+
 const add = catchAsync(async (req, res, next) => {
   const newItem = await SERVICE.add(req.body);
   res.status(201).json({
@@ -75,6 +80,7 @@ module.exports = {
   getAll,
   getById,
   getByTeacherId,
+  getClassSchedules,
   add,
   update,
   remove,

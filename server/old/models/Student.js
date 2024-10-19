@@ -10,7 +10,7 @@ const studentSchema = new Schema(
     yearLevel: { type: String, required: true },
     guardianName: { type: String, required: true },
     guardianPhone: { type: String, required: true },
-    courseId: { type: Schema.Types.ObjectId, ref: "Course", required: true },
+    programId: { type: Schema.Types.ObjectId, ref: "Program", required: true },
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true }
