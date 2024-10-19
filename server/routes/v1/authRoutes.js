@@ -4,5 +4,6 @@ const express = require('express');
 
     router.post('/register', authController.register);
     router.post('/login', authController.login);
+    router.post('/teacher/login', authController.loginTeacher);
 
     module.exports = router;

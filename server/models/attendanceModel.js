@@ -3,14 +3,13 @@ const Schema = mongoose.Schema;
 
 const attendanceSchema = new Schema(
   {
-    classId: { type: Schema.Types.ObjectId, ref: "Class", required: true },
-    attendanceDate: { type: Date, required: true },
-    studentId: { type: Schema.Types.ObjectId, ref: "Student", required: true },
-    status: {
-      type: String,
-      enum: ["present", "absent", "late"],
+    classScheduleId: {
+      type: Schema.Types.ObjectId,
+      ref: "ClassSchedule",
       required: true,
     },
+    attendanceDate: { type: Date, required: true },
+    daysOfWeek: { type: String, required: true },
   },
   { timestamps: true }
 );

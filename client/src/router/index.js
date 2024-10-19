@@ -77,6 +77,13 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
+        path: "/attendances",
+        name: "Attendances",
+        component: () => import("@/views/attendance/AttendanceView"),
+        props: { mode: "add" },
+        meta: { requiresAuth: true },
+      },
+      {
         path: "/schedules",
         name: "Schedules",
         component: () => import("@/views/schedules/scheduleView"),

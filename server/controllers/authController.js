@@ -6,6 +6,14 @@ const register = catchAsync(async (req, res) => {
   res.status(201).json({ status: "success", token });
 });
 
+
+const loginTeacher = catchAsync(async (req, res) => {
+  const { email, password } = req.body;
+  const results = await authService.loginTeacher(email, password);
+  res.status(200).json({ status: "success", results });
+});
+
+
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
   const { user, token } = await authService.login(email, password);
@@ -21,4 +29,4 @@ const login = catchAsync(async (req, res) => {
     });
 });
 
-module.exports = { register, login };
+module.exports = { register, login, loginTeacher };

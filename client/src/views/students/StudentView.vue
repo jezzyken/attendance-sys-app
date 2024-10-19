@@ -112,6 +112,13 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
+                <v-text-field
+                  v-model="editedItem.guardianEmail"
+                  label="Guardian Email"
+                  type="tel"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
                 <v-select
                   v-model="editedItem.programId"
                   :items="programs"
@@ -162,6 +169,7 @@ export default {
       { text: "Year Level", align: "start", sortable: true, value: "yearLevel" },
       { text: "Guardian Name", align: "start", sortable: true, value: "guardianName" },
       { text: "Guardian Phone", align: "start", sortable: true, value: "guardianPhone" },
+      { text: "Guardian Email", align: "start", sortable: true, value: "guardianEmail" },
       { text: "Program", align: "start", sortable: true, value: "programId.programAbr" },
       { text: "Actions", value: "actions", sortable: false },
     ],
@@ -175,6 +183,7 @@ export default {
       yearLevel: "",
       guardianName: "",
       guardianPhone: "",
+      guardianEmail: "",
       programId: "",
     },
     defaultItem: {
@@ -185,6 +194,7 @@ export default {
       yearLevel: "",
       guardianName: "",
       guardianPhone: "",
+      guardianEmail: "",
       programId: "",
     },
     yearLevels: ["First Year", "Second Year", "Third Year", "Fourth Year"],

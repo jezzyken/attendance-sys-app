@@ -11,6 +11,8 @@ const teacherSchema = new Schema(
     phoneNo: { type: String, required: true },
     employmentDate: { type: Date },
     status: { type: String, required: true },
+    password: { type: String, required: true, default: "gitteacheraccess" },
+    role: { type: String, required: true, default: "teacher" },
     departmentId: [
       {
         type: Schema.Types.ObjectId,
