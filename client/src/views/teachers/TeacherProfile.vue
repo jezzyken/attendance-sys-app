@@ -325,7 +325,6 @@ export default {
       };
     },
 
-    // Utility method to check for schedule conflicts
     hasScheduleConflict(newEvent) {
       return this.events.some((event) => {
         if (event.id === this.selectedEvent?.id) return false;
@@ -344,7 +343,6 @@ export default {
       });
     },
 
-    // Method to handle event drag-and-drop
     updateEventTime({ event, start, end }) {
       const eventToUpdate = this.events.find((e) => e.id === event.id);
       if (eventToUpdate) {
@@ -353,15 +351,9 @@ export default {
       }
     },
 
-    // Export schedule to iCal format
-    exportSchedule() {
-      // Implementation for exporting schedule
-      // You can use a library like ical-generator
-    },
   },
 
   created() {
-    // Sample events - replace with API call
     this.events = [
       {
         id: 1,
@@ -381,7 +373,6 @@ export default {
         room: "203",
         description: "Probability and Statistical Analysis",
       },
-      // Add more sample events as needed
     ];
   },
 };
